@@ -123,14 +123,10 @@
             + '<a href="{{ url_for("auth_logout") }}?next={{request.url}}">'
             + 'log out</a>';
         }
-        function loginFailed(errordata) {
-            console.log('error');
-            document.getElementById('flashes').innerHTML += '<br />Could NOT auto-login: ' + errordata["error"];
-        }
         $(document).ready(function() {
             console.log('try login');
             tryBackgroundLogin(
-                '/login?immediate=true', loginSuccess, loginFailed);
+                '/login?immediate=true', loginSuccess, null);
         });
     </script>
     {% endif %}
