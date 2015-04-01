@@ -174,7 +174,8 @@ class FAS(object):  # pragma: no cover
         flask.g.fas_session_id = 0
 
     def login(self, username=None, password=None, return_url=None,
-              cancel_url=None, groups=['_FAS_ALL_GROUPS_']):
+              cancel_url=None, groups=['_FAS_ALL_GROUPS_'],
+              immediate=False):
         """Tries to log in a user.
 
         Sets the user information on :attr:`flask.g.fas_user`.
@@ -228,7 +229,7 @@ class FAS(object):  # pragma: no cover
         else:
             return request.htmlMarkup(
                 trust_root, return_to,
-                form_tag_attrs={'id': 'openid_message'}, immediate=False)
+                form_tag_attrs={'id': 'openid_message'}, immediate=immediate)
 
     def logout(self):
         '''Logout the user associated with this session
