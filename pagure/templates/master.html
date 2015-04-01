@@ -13,6 +13,24 @@
         href="{{ url_for('static',
             filename='jquery-ui-1.11.2.custom.css')}}" />
     {% block header %}{% endblock %}
+
+    {% if config.get('PAGURE_AUTH') == 'fas' %}
+    <script type="text/javascript"
+        src="//apps.fedoraproject.org/global/js/jsautologin.js">
+    </script>
+    <script type="text/javascript">
+    {% if authenticated %}
+    console.log('success');
+    respondToLogin('*', true, {
+        "nickname": "{{ g.fas_user.username }}",
+    });
+    {% else %}
+    console.log('failure');
+    respondToLogin('*', false, null);
+    {% endif %}
+    </script>
+    {% endif %}
+
   </head>
   <body id="{% block tag %}{% endblock %}">
 
@@ -92,9 +110,30 @@
             filename='jquery-ui-1.11.2.custom.min.js') }}">
     </script>
     <script type="text/javascript"
-        src="{{ url_for('static',
-            filename='sorttable.js') }}">
+        src="{{ url_for('static', filename='sorttable.js') }}">
     </script>
+    {% if not authenticated %}
+    <script type="text/javascript">
+        function loginSuccess(userdata) {
+            console.log('succes');
+            document.getElementById('loginInfo').innerHTML =
+            '<span class="text">logged in as </span>'
+            + '<a href="{{ url_for("user_settings") }}">'
+            + userdata['nickname'] + '</a> |'
+            + '<a href="{{ url_for("auth_logout") }}?next={{request.url}}">'
+            + 'log out</a>';
+        }
+        function loginFailed(errordata) {
+            console.log('error');
+            document.getElementById('flashes').innerHTML += '<br />Could NOT auto-login: ' + errordata["error"];
+        }
+        $(document).ready(function() {
+            console.log('try login');
+            tryBackgroundLogin(
+                '/login?immediate=true', loginSuccess, loginFailed);
+        });
+    </script>
+    {% endif %}
     {% endblock %}
 
 </body>
