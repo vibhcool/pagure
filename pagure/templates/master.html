@@ -21,12 +21,12 @@
     <script type="text/javascript">
     {% if authenticated %}
     console.log('success');
-    respondToLogin('*', true, {
+    respondToLogin('{{ request.url_root }}', true, {
         "nickname": "{{ g.fas_user.username }}",
     });
     {% else %}
     console.log('failure');
-    respondToLogin('*', false, null);
+    respondToLogin('{{ request.url_root }}', false, null);
     {% endif %}
     </script>
     {% endif %}
